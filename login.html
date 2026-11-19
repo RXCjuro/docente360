@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ingresar · Docente360</title>
+<link rel="icon" href="assets/icons/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="css/login.css">
+</head>
+<body class="login">
+
+<header class="lg-cab">
+  <a class="lg-logo" href="login.html" aria-label="Docente360">
+    <img src="assets/icons/logo.svg" alt="" width="32" height="32">
+    <span>Docente360</span>
+  </a>
+  <p class="lg-zona">Acceso administrativo</p>
+</header>
+
+<main class="lg-main">
+  <figure class="lg-foto">
+    <img src="assets/img/campus.jpg" alt="Sede de CERTUS, edificio de once pisos con balcones de colores" width="588" height="510">
+  </figure>
+
+  <section class="lg-panel" aria-labelledby="lg-titulo">
+    <span class="lg-regla" aria-hidden="true"></span>
+    <h1 id="lg-titulo">Docente360</h1>
+    <p class="lg-sub">Gestión de docentes Certus</p>
+
+    <form id="form" class="lg-card" novalidate>
+      <h2>Iniciar sesión</h2>
+
+      <label for="correo">Correo</label>
+      <input id="correo" name="correo" type="email" inputmode="email" autocomplete="username"
+             placeholder="usuario@certus.edu.pe" required autofocus>
+
+      <label for="clave">Contraseña</label>
+      <div class="lg-clave">
+        <input id="clave" name="clave" type="password" autocomplete="current-password"
+               placeholder="••••••••" required>
+        <button type="button" id="ver" class="lg-ojo" aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button>
+      </div>
+
+      <p id="error" class="lg-error" role="alert" aria-live="assertive"></p>
+
+      <button id="entrar" class="lg-btn" type="submit">Ingresar</button>
+
+      <div class="lg-o" aria-hidden="true"><span>o</span></div>
+
+      <button id="google" class="lg-btn lg-btn-sec" type="button">
+        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+        Continuar con Google
+      </button>
+
+      <p class="lg-nota">Acceso exclusivo para personal autorizado</p>
+    </form>
+  </section>
+</main>
+
+<footer class="lg-pie">
+  <img src="assets/icons/logo.svg" alt="" width="24" height="24">
+  <p>© <span id="anio">2026</span> Docente360 · Portal de gestión docente</p>
+</footer>
+
+<script type="module">
+import { login, loginCorreo, observarSesion } from "./js/services/auth-service.js";
+
+const $ = (id) => document.getElementById(id);
+const form = $("form"), err = $("error"), btn = $("entrar"), g = $("google");
+$("anio").textContent = new Date().getFullYear();
+
+observarSesion((u) => { if (u) location.href = "dashboard.html"; });
+
+$("ver").onclick = (e) => {
+  const oculto = $("clave").type === "password";
+  $("clave").type = oculto ? "text" : "password";
+  e.currentTarget.textContent = oculto ? "Ocultar" : "Mostrar";
+  e.currentTarget.setAttribute("aria-pressed", String(oculto));
+  e.currentTarget.setAttribute("aria-label", oculto ? "Ocultar contraseña" : "Mostrar contraseña");
+};
+
+function ocupado(si, boton, texto) {
+  [btn, g].forEach((b) => (b.disabled = si));
+  if (boton) boton.dataset.txt ??= boton.textContent.trim();
+  if (boton) boton.textContent = si ? texto : boton.dataset.txt;
+  form.setAttribute("aria-busy", String(si));
+}
+
+async function entrar(accion, boton, texto) {
+  err.textContent = "";
+  ocupado(true, boton, texto);
+  try { await accion(); location.href = "dashboard.html"; }
+  catch (e) { err.textContent = e.message; ocupado(false, boton); }
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const correo = $("correo").value.trim(), clave = $("clave").value;
+  if (!correo || !clave) {
+    err.textContent = "Escribe tu correo y tu contraseña.";
+    (correo ? $("clave") : $("correo")).focus();
+    return;
+  }
+  entrar(() => loginCorreo(correo, clave), btn, "Ingresando…");
+});
+g.onclick = () => entrar(login, g, "Conectando…");
+</script>
+</body>
+</html>

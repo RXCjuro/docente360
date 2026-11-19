@@ -1,0 +1,115 @@
+/* Pantalla de ingreso · basada en la maqueta Docente360 */
+:root{
+  --lg-fondo:#f3f6fc;
+  --lg-navy:#0b2a6b;
+  --lg-azul:#1f4fff;
+  --lg-azul-oscuro:#1740d6;
+  --lg-zona:#5b79e6;
+  --lg-linea:#dde3f0;
+  --lg-texto:#1b2438;
+  --lg-suave:#667089;
+  --lg-error:#b3261e;
+}
+*{box-sizing:border-box}
+body.login{
+  margin:0;min-height:100vh;display:flex;flex-direction:column;
+  font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--lg-fondo);color:var(--lg-texto);line-height:1.5;
+}
+:focus-visible{outline:3px solid var(--lg-azul);outline-offset:2px}
+
+/* Cabecera */
+.lg-cab{
+  width:min(1040px,100% - 3rem);margin-inline:auto;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  padding:1.1rem 0;border-bottom:1px solid var(--lg-linea);
+}
+.lg-logo{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--lg-navy);font-weight:700;font-size:1.05rem;justify-self:start}
+.lg-zona{margin:0;grid-column:2;font-size:.78rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--lg-zona)}
+
+/* Contenido principal */
+.lg-main{
+  flex:1;width:min(1040px,100% - 3rem);margin-inline:auto;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;
+  gap:clamp(2rem,6vw,5rem);padding:clamp(2rem,5vw,4rem) 0;
+}
+.lg-panel{grid-column:1;grid-row:1;max-width:440px}
+.lg-foto{grid-column:2;grid-row:1;margin:0;justify-self:end;width:min(100%,460px)}
+.lg-foto img{
+  display:block;width:100%;height:auto;aspect-ratio:7/6;object-fit:cover;object-position:center;
+  border-radius:22%;box-shadow:0 24px 50px -24px rgba(11,42,107,.45);
+}
+
+.lg-regla{display:block;width:44px;height:2px;background:var(--lg-navy);margin-bottom:1.25rem}
+.lg-panel h1{margin:0;font-size:clamp(2.3rem,5vw,3.2rem);line-height:1.05;font-weight:800;letter-spacing:-.02em;color:var(--lg-navy)}
+.lg-sub{margin:.35rem 0 1.75rem;color:var(--lg-suave);font-size:1rem}
+
+/* Tarjeta de acceso */
+.lg-card{
+  background:#fff;border:1px solid var(--lg-linea);border-radius:16px;
+  padding:1.5rem 1.5rem 1.25rem;box-shadow:0 10px 30px -18px rgba(11,42,107,.35);
+}
+.lg-card h2{margin:0 0 1rem;font-size:1.1rem;font-weight:700;color:var(--lg-navy)}
+.lg-card label{display:block;margin:0 0 .3rem;font-size:.85rem;font-weight:600;color:var(--lg-navy)}
+.lg-card input{
+  width:100%;font:inherit;font-size:.95rem;padding:.7rem .8rem;margin-bottom:1rem;
+  background:#f8f9fc;color:var(--lg-texto);border:1px solid var(--lg-linea);border-radius:10px;
+}
+.lg-card input::placeholder{color:#9aa3b8}
+.lg-card input:focus{background:#fff;border-color:var(--lg-azul);outline:none;box-shadow:0 0 0 3px rgba(31,79,255,.18)}
+.lg-card input[aria-invalid="true"]{border-color:var(--lg-error)}
+
+.lg-clave{position:relative}
+.lg-clave input{padding-right:5.2rem}
+.lg-ojo{
+  position:absolute;right:.35rem;top:.35rem;bottom:calc(1rem + .35rem);
+  background:none;border:0;border-radius:8px;padding:0 .65rem;font:inherit;font-size:.8rem;font-weight:600;
+  color:var(--lg-azul);cursor:pointer;
+}
+.lg-ojo:hover{background:rgba(31,79,255,.08)}
+
+.lg-error{margin:-.5rem 0 .5rem;min-height:1.25rem;font-size:.85rem;color:var(--lg-error)}
+
+.lg-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:.6rem;
+  font:inherit;font-size:.95rem;font-weight:600;padding:.8rem 1rem;border-radius:10px;border:1px solid transparent;
+  background:var(--lg-azul);color:#fff;cursor:pointer;
+}
+.lg-btn:hover:not(:disabled){background:var(--lg-azul-oscuro)}
+.lg-btn:disabled{opacity:.65;cursor:progress}
+.lg-btn-sec{background:#fff;color:var(--lg-texto);border-color:var(--lg-linea)}
+.lg-btn-sec:hover:not(:disabled){background:#f3f6fc}
+
+.lg-o{display:flex;align-items:center;gap:.75rem;margin:.9rem 0;color:var(--lg-suave);font-size:.8rem}
+.lg-o::before,.lg-o::after{content:"";flex:1;height:1px;background:var(--lg-linea)}
+
+.lg-nota{margin:1rem 0 0;text-align:center;font-size:.78rem;color:var(--lg-suave)}
+
+/* Pie */
+.lg-pie{
+  background:#fff;border-top:1px solid var(--lg-linea);
+  display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:1.1rem 1rem;
+}
+.lg-pie p{margin:0;font-size:.78rem;color:var(--lg-suave)}
+
+@media (prefers-reduced-motion:no-preference){
+  .lg-btn,.lg-card input,.lg-ojo{transition:background .15s,border-color .15s,box-shadow .15s}
+  .lg-foto img{animation:lg-entra .6s ease-out both}
+  @keyframes lg-entra{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+}
+
+/* Tablet y celular: la foto sube y todo se centra en una columna */
+@media (max-width:860px){
+  .lg-cab{grid-template-columns:1fr;justify-items:center;gap:.35rem;padding:.9rem 0}
+  .lg-zona{grid-column:1;font-size:.7rem}
+  .lg-logo{justify-self:center}
+  .lg-main{grid-template-columns:1fr;gap:1.75rem;padding:1.5rem 0 2.5rem}
+  .lg-foto{grid-column:1;grid-row:1;justify-self:center;width:min(100%,380px)}
+  .lg-foto img{aspect-ratio:4/3;border-radius:20%}
+  .lg-panel{grid-column:1;grid-row:2;max-width:none;width:min(100%,460px);justify-self:center}
+}
+@media (max-width:480px){
+  .lg-main,.lg-cab{width:calc(100% - 2rem)}
+  .lg-card{padding:1.25rem 1rem 1rem}
+  .lg-card h2{text-align:center}
+}
