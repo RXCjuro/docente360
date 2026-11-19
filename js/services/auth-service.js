@@ -14,6 +14,7 @@ export const esInstitucional = (e) => {
 };
 
 const MENSAJES = {
+  "auth/configuration-not-found": "Firebase Authentication no está configurado en este proyecto. Activa los proveedores Correo/contraseña y Google.",
   "auth/invalid-credential": "Correo o contraseña incorrectos.",
   "auth/wrong-password": "Correo o contraseña incorrectos.",
   "auth/user-not-found": "Correo o contraseña incorrectos.",
