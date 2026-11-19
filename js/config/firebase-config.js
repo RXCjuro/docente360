@@ -4,12 +4,12 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyCK9pfxQfxbGVXqnlP4jLOBk6EZAS6KJkA",
-  authDomain: "docente-1c7f6.firebaseapp.com",
-  projectId: "docente-1c7f6",
-  storageBucket: "docente-1c7f6.firebasestorage.app",
-  messagingSenderId: "519222119958",
-  appId: "1:519222119958:web:243130ed66cc7552556f37"
+  apiKey: "AIzaSyBS78uZ2t5j15dLS_BXkgvmbVfBsnFV0LI",
+  authDomain: "docente360-a913d.firebaseapp.com",
+  projectId: "docente360-a913d",
+  storageBucket: "docente360-a913d.firebasestorage.app",
+  messagingSenderId: "196063120887",
+  appId: "1:196063120887:web:204429e9a0218c052032f2"
 };
 
 // Dominio del correo institucional (también está en firestore.rules)
