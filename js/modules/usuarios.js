@@ -2,6 +2,7 @@ import { iniciar } from "../app.js";
 import { listar, actualizar } from "../services/firestore-service.js";
 import { esc } from "../utils/helpers.js";
 import { toast } from "../ui/toast.js";
+import { esUltimoAdmin } from "../utils/business-rules.js";
 
 const user = await iniciar("usuarios", ["admin"]);
 if (user) {
@@ -16,6 +17,14 @@ if (user) {
     </tbody></table></div>`;
   root.onchange = async (e) => {
     if (!e.target.dataset.id) return;
+    const seleccionado = usuarios.find((u) => u.id === e.target.dataset.id);
+    if (seleccionado?.rol === "admin"
+      && e.target.value !== "admin"
+      && esUltimoAdmin(usuarios, seleccionado.id)) {
+      e.target.value = "admin";
+      toast("No puedes degradar al último administrador", "error");
+      return;
+    }
     try { await actualizar("usuarios", e.target.dataset.id, { rol: e.target.value }); toast("Rol actualizado"); }
     catch (err) { toast("No se pudo cambiar el rol", "error"); }
   };

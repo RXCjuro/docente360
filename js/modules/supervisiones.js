@@ -1,6 +1,7 @@
 import { iniciar } from "../app.js";
 import { montarCRUD } from "../ui/crud.js";
 import { nota, textoRequeridoSinEspacios } from "../utils/validators.js";
+import { validarPeriodo, validarPlazoRegistro } from "../utils/business-rules.js";
 
 const fechaPeriodo = (periodo, fecha) => {
   if (!periodo || !fecha) return false;
@@ -26,6 +27,7 @@ if (user) await montarCRUD({
   ],
   columnas: ["docenteId", "periodo", "fecha", "curso", "puntaje"],
   validarRegistro: (data, editando, filas) => {
+    if (!validarPeriodo(data.periodo)) return "El periodo académico no está habilitado.";
     if (!fechaPeriodo(data.periodo, data.fecha)) return "La fecha no pertenece al periodo elegido.";
     if (data.fecha > new Date().toISOString().slice(0, 10)) return "La fecha no puede ser futura.";
     const hace4Dias = new Date();

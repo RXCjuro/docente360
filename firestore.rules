@@ -12,7 +12,11 @@ service cloud.firestore {
     match /usuarios/{uid} {
       allow read: if institucional() && (request.auth.uid == uid || rol() == 'admin');
       allow create: if institucional() && request.auth.uid == uid && request.resource.data.rol == 'consulta';
-      allow update: if institucional() && rol() == 'admin';
+      allow update: if institucional()
+        && rol() == 'admin'
+        && !(request.auth.uid == uid
+          && resource.data.rol == 'admin'
+          && request.resource.data.rol != 'admin');
     }
     match /{col}/{id} {
       allow read: if institucional() && col in ['docentes', 'evaluaciones', 'supervisiones', 'encuestas'];

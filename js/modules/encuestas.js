@@ -2,6 +2,7 @@ import { iniciar } from "../app.js";
 import { montarCRUD } from "../ui/crud.js";
 import { nota, enteroNoNegativo } from "../utils/validators.js";
 import { redondear } from "../utils/helpers.js";
+import { validarPeriodo } from "../utils/business-rules.js";
 
 const user = await iniciar("encuestas");
 
@@ -16,6 +17,8 @@ if (user) await montarCRUD({
     { k: "comentarios", label: "Comentarios destacados", type: "textarea" },
   ],
   columnas: ["docenteId", "periodo", "curso", "puntaje"],
+  validarRegistro: (data) =>
+    validarPeriodo(data.periodo) ? "" : "El periodo académico no está habilitado.",
   transformar: (data) => { data.puntaje = redondear(data.puntaje, 1); },
   avisoRegistro: (data) => Number(data.respuestas) < 5
     ? "Encuesta guardada: tiene pocas respuestas y se marca como poco confiable."

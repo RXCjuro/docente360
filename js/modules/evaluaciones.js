@@ -2,6 +2,7 @@ import { iniciar } from "../app.js";
 import { montarCRUD } from "../ui/crud.js";
 import { nota } from "../utils/validators.js";
 import { redondear } from "../utils/helpers.js";
+import { validarPeriodo } from "../utils/business-rules.js";
 
 const user = await iniciar("evaluaciones");
 
@@ -15,6 +16,7 @@ if (user) await montarCRUD({
   ],
   columnas: ["docenteId", "periodo", "nota"],
   validarRegistro: (data, editando, filas) => {
+    if (!validarPeriodo(data.periodo)) return "El periodo académico no está habilitado.";
     const duplicada = filas.find((f) =>
       f.id !== editando?.id && f.docenteId === data.docenteId && f.periodo === data.periodo
     );
