@@ -1,27 +1,78 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    function institucional() {
-      return request.auth != null
-        && request.auth.token.email_verified == true
-        && request.auth.token.email.matches('^[^@]+@certus[.]edu[.]pe$');
-    }
-    function rol() { return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol; }
-    function escribe() { return institucional() && rol() in ['admin', 'editor']; }
 
-    match /usuarios/{uid} {
-      allow read: if institucional() && (request.auth.uid == uid || rol() == 'admin');
-      allow create: if institucional() && request.auth.uid == uid && request.resource.data.rol == 'consulta';
-      allow update: if institucional()
-        && rol() == 'admin'
-        && !(request.auth.uid == uid
-          && resource.data.rol == 'admin'
-          && request.resource.data.rol != 'admin');
+    // Verificar que el usuario tenga un perfil autorizado
+    function autorizado() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+        && get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.email == request.auth.token.email
+        && get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol in ['admin', 'editor', 'consulta'];
     }
+
+    // Obtener el rol del usuario
+    function rol() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol;
+    }
+
+    // Verificar si es administrador
+    function esAdmin() {
+      return autorizado() && rol() == 'admin';
+    }
+
+    // Verificar si puede crear y editar
+    function puedeEditar() {
+      return autorizado() && rol() in ['admin', 'editor'];
+    }
+
+    // Colección de usuarios y roles
+    match /usuarios/{uid} {
+
+      // Cada usuario puede consultar su perfil.
+      // El administrador puede consultar todos los perfiles.
+      allow read: if autorizado()
+        && (request.auth.uid == uid || esAdmin());
+
+      // Los perfiles se crean manualmente desde Firebase Console
+      allow create: if false;
+
+      // Solo el administrador puede actualizar perfiles
+      allow update: if esAdmin();
+
+      // No se permite eliminar perfiles desde la aplicación
+      allow delete: if false;
+    }
+
+    // Colecciones principales de Docente360
     match /{col}/{id} {
-      allow read: if institucional() && col in ['docentes', 'evaluaciones', 'supervisiones', 'encuestas'];
-      allow create, update: if escribe() && col in ['docentes', 'evaluaciones', 'supervisiones', 'encuestas'];
-      allow delete: if institucional() && rol() == 'admin' && col in ['docentes', 'evaluaciones', 'supervisiones', 'encuestas'];
+
+      // Todos los usuarios autorizados pueden consultar
+      allow read: if autorizado()
+        && col in [
+          'docentes',
+          'evaluaciones',
+          'supervisiones',
+          'encuestas'
+        ];
+
+      // Administradores y editores pueden crear y editar
+      allow create, update: if puedeEditar()
+        && col in [
+          'docentes',
+          'evaluaciones',
+          'supervisiones',
+          'encuestas'
+        ];
+
+      // Solo el administrador puede eliminar
+      allow delete: if esAdmin()
+        && col in [
+          'docentes',
+          'evaluaciones',
+          'supervisiones',
+          'encuestas'
+        ];
     }
   }
 }

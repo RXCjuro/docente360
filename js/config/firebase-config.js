@@ -1,20 +1,28 @@
-// Reemplaza con la configuración de tu proyecto (Firebase Console > Configuración del proyecto > Tus apps > Web)
+
+/* Configuración de Firebase */
+// Importar las funciones necesarias
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// Configuración del proyecto Firebase
 export const firebaseConfig = {
-  apiKey: "AIzaSyBS78uZ2t5j15dLS_BXkgvmbVfBsnFV0LI",
-  authDomain: "docente360-a913d.firebaseapp.com",
-  projectId: "docente360-a913d",
-  storageBucket: "docente360-a913d.firebasestorage.app",
-  messagingSenderId: "196063120887",
-  appId: "1:196063120887:web:204429e9a0218c052032f2"
+    apiKey: "AIzaSyBBx9FFvutWY2KrFO1ZQ0UgNUd6S6t-8Ao",
+    authDomain: "docente360-2f8f3.firebaseapp.com",
+    projectId: "docente360-2f8f3",
+    storageBucket: "docente360-2f8f3.firebasestorage.app",
+    messagingSenderId: "761344811316",
+    appId: "1:761344811316:web:4cee429a9f287a68490561"
 };
 
-// Dominio del correo institucional (también está en firestore.rules)
-export const DOMINIO = "certus.edu.pe";
+// Dominio del correo institucional
+export const DOMINIO = "";
 
+// Inicializar Firebase
 export const app = initializeApp(firebaseConfig);
+
+// Inicializar Authentication
 export const auth = getAuth(app);
+
+// Inicializar Firestore
 export const db = getFirestore(app);

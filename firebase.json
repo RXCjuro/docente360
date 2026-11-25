@@ -12,7 +12,8 @@
       "**/node_modules/**",
       "docs/**",
       "README.md",
-      "firestore.*"
+      "firestore.*",
+      "y/**"
     ]
   }
 }
